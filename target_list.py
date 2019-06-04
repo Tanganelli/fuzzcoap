@@ -15,9 +15,9 @@
 
 def get_target_info_list(target_name, aut_host, aut_port):
     # USER: user home directory
-    USER_DIR = "/home/vagrant"
+    USER_DIR = "/root"
     # USER: base directory where the target applications are located
-    BASE_DIR = "%s/coap-apps" % (USER_DIR)
+    BASE_DIR = "%s" % (USER_DIR)
 
     # USER: example of a user-defined list of strings to be used against a specific SUT.
     # This example contains relevant strings for Resource Directory targets, and is used against the txthings-rd SUT
@@ -27,6 +27,14 @@ def get_target_info_list(target_name, aut_host, aut_port):
     ]
 
     _target_list = {
+
+        'asynchCoAP-server': {
+            'start_cmd': "python %s/asynchCoAP/server.py -i %s -p %d" % (BASE_DIR, aut_host, aut_port),
+            'time_to_settle': 1,
+            'heartbeat_path': [('Uri-Path', '.well-known'), ('Uri-Path', 'core')],
+            'default_uris': ['.well-known/core'],
+            'lib': 'asynchCoAP',
+        },
 
         'aiocoap-server': {
             'start_cmd': "python3.5 %s/aiocoap/server.py" % (BASE_DIR),
