@@ -59,21 +59,16 @@ fi
 
 if [ -z "$PORT" ]; then PORT=35111; fi
 
-read -r -p "Should we create folder $new_folder? " response
-if [[ $response == "y" ]]
+
+echo "Creating folder"
+set -x; mkdir -p $new_folder
+echo "Enabling coredump files"
+set -x; ulimit -c unlimited; set +x;
+if [ -z ${DEBUG+x} ]
 then
-    echo "Creating folder"
-    set -x; mkdir -p $new_folder
-    echo "Enabling coredump files"
-    set -x; ulimit -c unlimited; set +x;
-    if [ -z ${DEBUG+x} ]
-    then
-        echo "Running ProcessMonitor script on port ${PORT}"
-        set -x; stdbuf -o 0 python process_monitor_unix.py --crash_bin $new_folder/crashlist.log --log_level 10 --coredump_dir $new_folder --port $PORT &> $new_folder/target.log &
-    else
-        echo "Running ProcessMonitor script in 'DEBUG' mode on port ${PORT}"
-        set -x; stdbuf -o 0 pdb process_monitor_unix.py --crash_bin $new_folder/crashlist.log --log_level 10 --coredump_dir $new_folder --port $PORT 2>&1 | tee $new_folder/target.log
-    fi
+    echo "Running ProcessMonitor script on port ${PORT}"
+    set -x; stdbuf -o 0 python process_monitor_unix.py --crash_bin $new_folder/crashlist.log --log_level 10 --coredump_dir $new_folder --port $PORT &> $new_folder/target.log &
 else
-    exit 0
+    echo "Running ProcessMonitor script in 'DEBUG' mode on port ${PORT}"
+    set -x; stdbuf -o 0 pdb process_monitor_unix.py --crash_bin $new_folder/crashlist.log --log_level 10 --coredump_dir $new_folder --port $PORT 2>&1 | tee $new_folder/target.log
 fi

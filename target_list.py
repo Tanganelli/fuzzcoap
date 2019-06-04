@@ -29,7 +29,7 @@ def get_target_info_list(target_name, aut_host, aut_port):
     _target_list = {
 
         'asynchCoAP-server': {
-            'start_cmd': "python %s/asynchCoAP/server.py -i %s -p %d" % (BASE_DIR, aut_host, aut_port),
+            'start_cmd': "python3.6 %s/asynchCoAP/server.py -i %s -p %d" % (BASE_DIR, aut_host, aut_port),
             'time_to_settle': 1,
             'heartbeat_path': [('Uri-Path', '.well-known'), ('Uri-Path', 'core')],
             'default_uris': ['.well-known/core'],

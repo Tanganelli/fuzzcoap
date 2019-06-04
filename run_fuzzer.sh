@@ -116,17 +116,12 @@ if [ -z "$CDHOST" ]; then CDHOST=-1; fi
 if [ -z "$CDPORT" ]; then CDPORT=-1; fi
 if [ -z "$CSPORT" ]; then CSPORT=-1; fi
 
-read -r -p "Should we use folder $folder? " response
-if [[ $response == "y" ]]
+
+if [ -z ${DEBUG+x} ]
 then
-    if [ -z ${DEBUG+x} ]
-    then
-        echo "Running Fuzzer"
-        set -x; python $FUZZER_SCRIPT --target_name $TARGET --host $PMHOST --port $PMPORT --aut_host $CDHOST --aut_port $CDPORT --aut_src_port $CSPORT --output_dir $folder
-    else
-        echo "Running Fuzzer in DEBUG mode"
-        set -x; stdbuf -o 0 pdb $FUZZER_SCRIPT --target_name $TARGET --host $PMHOST --port $PMPORT --aut_host $CDHOST --aut_port $CDPORT --aut_src_port $CSPORT --output_dir $folder 2>&1 | tee $folder/fuzzer.log
-    fi
+    echo "Running Fuzzer"
+    set -x; python $FUZZER_SCRIPT --target_name $TARGET --host $PMHOST --port $PMPORT --aut_host $CDHOST --aut_port $CDPORT --aut_src_port $CSPORT --output_dir $folder
 else
-    exit 0
+    echo "Running Fuzzer in DEBUG mode"
+    set -x; stdbuf -o 0 pdb $FUZZER_SCRIPT --target_name $TARGET --host $PMHOST --port $PMPORT --aut_host $CDHOST --aut_port $CDPORT --aut_src_port $CSPORT --output_dir $folder 2>&1 | tee $folder/fuzzer.log
 fi
